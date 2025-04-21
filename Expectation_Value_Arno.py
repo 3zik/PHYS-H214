@@ -15,7 +15,6 @@ def x_expectation(r, wavefns):
         delxstorage.append(deltax)
     print(delxstorage)
 
-
 def p_expectation(r, wavefns):
     #This computes the standard deviation Δp = sqrt(<p²> - <p>²) for each wavefunction
     h = 1.054571817 * 10**-34
