@@ -10,4 +10,7 @@ https://docs.google.com/document/d/1xR0bdTydLz39wkOwhVFgz16sop9FTg8SNKK9pPxjLpQ/
 Presentation for the project is linked here:
 https://docs.google.com/presentation/d/1cM1cR8HjNV_OdxnBONecHRU6CFLf-vY5BhrmQL630tg/edit?usp=sharing
 
+Spreadsheet for report (from NIST data):
+https://docs.google.com/spreadsheets/d/127P4-5wNRlVIFX3TeWaBX4oOV3KLjd0dtYpSthGmoRw/edit?usp=sharing
+
 EF
