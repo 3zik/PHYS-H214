@@ -67,6 +67,20 @@ def find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6):
         E_prev = E0
     raise ValueError("NO CONVERGE")
 
+delxstorage = []
+delpstorage = []
+def x_expectation(r, wavefns):
+    # This computes the standard deviation Δx = sqrt(<x²> - <x>²) for each wavefunction
+    for i in range(wavefns.shape[1]):
+        efunc = wavefns[:, i]
+        integrand1 = r * efunc**2
+        integrand2 = (r**2) * efunc**2
+        x1 = np.trapz(integrand1, r)
+        x2 = np.trapz(integrand2, r)
+        deltax = np.sqrt(x2 - x1**2)
+        delxstorage.append(deltax)
+    return (delxstorage)
+
 # === Main execution ===
 if __name__ == "__main__":
     # 1. Convergence in R
@@ -114,3 +128,9 @@ if __name__ == "__main__":
     plt.grid(True)
     plt.tight_layout()
     plt.show()
+
+
+
+    # Additional Code for Uncertainty#
+
+    print("Uncertainty of x (e.g. delta x) is:" + x_expectation(r, wavefns))
