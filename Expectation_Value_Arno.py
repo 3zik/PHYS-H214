@@ -22,7 +22,7 @@ def p_expectation(r, wavefns):
     for i in range(wavefns.shape[1]):
         efunc = wavefns[:, i]
         integrand1 = np.gradient(h*efunc**2)
-        integrand2 = np.gradient(-h**2*efunc**2)
+        integrand2 = np.gradient(np.gradient(-h**2*efunc**2))
         p1 = np.trapezoid(integrand1,r)
         p2 = np.transpose(integrand2,r)
         deltap = np.sqrat(p2 + p1**2)
