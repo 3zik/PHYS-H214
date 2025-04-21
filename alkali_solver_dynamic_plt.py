@@ -65,7 +65,7 @@ def find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6):
                 print("YES CONVERGE\n")
                 return R, N, E0
         E_prev = E0
-    raise ValueError("No convergence in provided R_list")
+    raise ValueError("NO CONVERGE")
 
 # === Main execution ===
 if __name__ == "__main__":
