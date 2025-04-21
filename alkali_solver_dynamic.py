@@ -1,5 +1,7 @@
 import numpy as np
 import scipy.linalg
+import matplotlib.pyplot as plt
+
 
 def model_potential(r, alpha_c, a_l):
     """
@@ -104,7 +106,37 @@ if __name__ == "__main__":
     h_target = 0.01
     tol = 1e-6
 
-    R_conv, N_conv, E0 = find_converged_R_dynamic(
-        R_list, h_target, l, alpha_c, a_l, tol=tol
-    )
+    R_conv, N_conv, E0 = find_converged_R_dynamic(R_list, h_target, l, alpha_c, a_l, tol=tol)
     print(f"\nFinal converged energy:\nR = {R_conv} a.u., N = {N_conv}, E0 = {E0:.8f} au")
+
+
+""" PLOTTING """
+
+# Use the converged R and eigenstates
+r, energies, wavefunctions = solve_radial(R_conv, N, l, alpha_c, a_l, num_states=3)
+
+# Choose the ground state
+f0 = wavefunctions[0]
+R0 = f0 / r  # Radial wavefunction
+
+# Normalize R0
+norm = np.sqrt(np.trapz(R0**2 * r**2, r))  # Radial normalization
+R0_normalized = R0 / norm
+
+# Plot
+plt.figure(figsize=(8, 5))
+plt.plot(r, R0_normalized, label='Ground state')
+plt.xlabel('r (a.u.)')
+plt.ylabel(r'$R_0(r)$')
+plt.title('Normalized Radial Wavefunction for Ground State')
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+"""
+    Peaks = most probable radial distances.
+    If the wavefunction has no nodes, it’s the ground state.
+    1 node -> 1st excited state, 2 nodes -> 2nd excited state, etc.
+"""
+
