@@ -65,50 +65,46 @@ def solve_radial(R, N, l, alpha_c, a_l, num_states=10):
     return E, f, R_n, r
 
 def find_converged_R(R_list, N, l, alpha_c, a_l, tol=1e-6):
-    """
-    Loop over candidate R values to find convergence of the ground‐state energy.
-    """
+    """Loop R to find convergence of the ground‐state energy."""
     E_prev = None
     for R in R_list:
         E, _, _, _ = solve_radial(R, N, l, alpha_c, a_l, num_states=1)
         E0 = E[0]
-        print(f"R = {R:.1f} a.u.  →  E0 = {E0:.8f} au")
+        print(f"R = {R:.1f} a.u.  ->  E0 = {E0:.8f} au")
         if E_prev is not None and abs(E0 - E_prev) < tol:
             print(f"Converged at R = {R:.1f} a.u. within ΔE < {tol}")
             return R, E0
         E_prev = E0
-    raise ValueError("No convergence in provided R_list")
+    raise ValueError("NO CONVERGE")
 
 def find_converged_R_dynamic(R_list, h_target, l, alpha_c, a_l, tol=1e-6):
-    """
-    For each R in R_list, choose N so that Δr ≈ h_target,
-    then solve and check convergence of E₀.
-    """
     E_prev = None
     for R in R_list:
-        # choose N to keep grid spacing ~ h_target
-        N = max(100, int((R - a_l) / h_target))
+        N = int((R - a_l) / h_target)
         E, _, _, _ = solve_radial(R, N, l, alpha_c, a_l, num_states=1)
         E0 = E[0]
-        print(f"R={R:4.0f} a.u.  N={N:5d}  → E0={E0:.8f}  "
-              f"{'(ΔE={:.2e})'.format(E0-E_prev) if E_prev is not None else ''}")
-        if E_prev is not None and abs(E0 - E_prev) < tol:
-            print(f" Converged at R={R:.0f} a.u., ΔE={abs(E0-E_prev):.2e} au")
-            return R, N, E0
+        if E_prev is not None:
+            dE = abs(E0 - E_prev)
+            print(f"R = {R:.1f} a.u., N = {N}, E0 = {E0:.8f}, ΔE = {dE:.2e}")
+            if dE < tol:
+                print("YES CONVERGE")
+                return R, N, E0
+        else:
+            print(f"R = {R:.1f} a.u., N = {N}, E0 = {E0:.8f}")
         E_prev = E0
-    raise ValueError("Still no convergence – try larger R_list or smaller h_target")
+
+    raise ValueError("NO CONVERGE")
 
 
 if __name__ == "__main__":
-    # Example for Lithium (l=0):
-    alpha_c = 0.1915   # core polarizability (au)
-    a_l     = 0.3      # cut‑off radius (au)
-    R_list = [30, 40, 50, 60, 80, 100, 120, 150, 200]
-    N       = 2000     # number of radial steps
-    l       = 0        # azimuthal Quantum number
+    alpha_c = 0.1915
+    a_l     = 0.3
+    l       = 0
+    R_list  = [30, 40, 50, 60, 80, 100, 120, 150, 200, 300]
+    h_target = 0.01
+    tol = 1e-6
 
-    print(model_potential)
-
-
-    R_conv, E0 = find_converged_R(R_list, N, l, alpha_c, a_l)
-    print(f"\n→ Final choice: R = {R_conv:.1f} a.u.,  E0 = {E0:.8f} au")
+    R_conv, N_conv, E0 = find_converged_R_dynamic(
+        R_list, h_target, l, alpha_c, a_l, tol=tol
+    )
+    print(f"\nFinal converged energy:\nR = {R_conv} a.u., N = {N_conv}, E0 = {E0:.8f} au")
