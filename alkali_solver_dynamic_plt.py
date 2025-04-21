@@ -4,8 +4,8 @@ from scipy.linalg import eigh_tridiagonal
 
 # ----------------------- PHYSICAL PARAMETERS ----------------------- #
 l = 0  # azimuthal quantum number
-alpha_c = 0.801  # core polarizability
-a_l = 0.05      # inner hard wall radius (a.u.)
+alpha_c = 0.192  # core polarizability
+a_l = 0.833     # inner hard wall radius (a.u.)
 
 # === Effective potential === #
 def V_eff(r, l, alpha_c, a_l):
@@ -70,16 +70,17 @@ def find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6):
 # === Main execution ===
 if __name__ == "__main__":
     # 1. Convergence in R
-    R_list   = [30, 40, 50, 60, 80, 100, 120, 150, 200]
-    h_target = 0.01  # target grid spacing (a.u.)
+    R_list = [100, 150, 200, 250, 300, 400, 500, 1000, 1500, 2000]
+    h_target = 0.0001  # target grid spacing (a.u.)
     R_conv, N, E0 = find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6)
 
     # 2. Solve for first 5 states at converged R
     r, energies, wavefns = solve_radial(R_conv, N, l, alpha_c, a_l, num_states=5)
 
     # 3. Print energies
-    print("\nEnergy levels (a.u.):")
+    print("\nEnergy levels (eV):")
     for i, E in enumerate(energies):
+        E = E*27.2114 # Conversion Factor from a.u. to eV
         print(f"n={i}, E={E:.8f}")
 
     # 4. Plot first 3 radial wavefunctions R_n(r)
