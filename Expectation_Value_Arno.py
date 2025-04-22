@@ -39,7 +39,7 @@ def x_expectation2(r, f_n):
 
 def p_expectation2(r, f_n):
     #This computes the standard deviation Δp = sqrt(<p²> - <p>²) for each wavefunction
-    h_bar = 1.054571817 * 10**-34
+    h_bar = 1 #Atomic Untis
     integrand1 = h_bar * f_n * np.gradient(f_n) # also has a factor of 1/i
     integrand2 = -h_bar**2 * f_n * np.gradient(np.gradient(f_n))
     p1 = np.trapz(integrand1,r) # can be trapezoid or trapz depending on numpy version
