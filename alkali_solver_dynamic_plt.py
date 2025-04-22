@@ -81,6 +81,19 @@ def x_expectation(r, wavefns):
         delxstorage.append(deltax)
     return (delxstorage)
 
+def p_expectation(r, wavefns):
+    #This computes the standard deviation Δp = sqrt(<p²> - <p>²) for each wavefunction
+    h_bar = 1.054571817 * 10**-34
+    for i in range(wavefns.shape[1]):
+        efunc = wavefns[:, i]
+        integrand1 = h_bar * efunc * np.gradient(efunc) # also has a factor of 1/i
+        integrand2 = -h_bar**2 * efunc * np.gradient(np.gradient(efunc))
+        p1 = np.trapz(integrand1,r) # can be trapezoid or trapz depending on numpy version
+        p2 = np.trapz(integrand2,r) # can be trapezoid or trapz depending on numpy version
+        deltap = np.sqrt(p2 + p1**2)
+        delpstorage.append(deltap)
+    return (delpstorage)
+
 # === Main execution ===
 if __name__ == "__main__":
     # 1. Convergence in R
@@ -133,4 +146,5 @@ if __name__ == "__main__":
 
     # Additional Code for Uncertainty #
 
-    print("Uncertainty of x (e.g. delta x) is:" + x_expectation(r, wavefns))
+    print("Uncertainty of x (e.g. delta x) is:" + str(x_expectation(r, wavefns)))
+    print("Uncertainty of p (e.g. delta p) is:" + str(p_expectation(r, wavefns)))
