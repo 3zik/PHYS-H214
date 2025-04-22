@@ -131,6 +131,6 @@ if __name__ == "__main__":
 
 
 
-    # Additional Code for Uncertainty#
+    # Additional Code for Uncertainty #
 
     print("Uncertainty of x (e.g. delta x) is:" + x_expectation(r, wavefns))
