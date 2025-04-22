@@ -13,7 +13,7 @@ def x_expectation(r, wavefns):
         x2 = np.trapz(integrand2, r) # can be trapezoid or trapz depending on numpy version
         deltax = np.sqrt(x2 - x1**2)
         delxstorage.append(deltax)
-    print(delxstorage)
+    return(delxstorage)
 
 def p_expectation(r, wavefns):
     #This computes the standard deviation Δp = sqrt(<p²> - <p>²) for each wavefunction
@@ -26,7 +26,7 @@ def p_expectation(r, wavefns):
         p2 = np.trapz(integrand2,r) # can be trapezoid or trapz depending on numpy version
         deltap = np.sqrt(p2 + p1**2)
         delpstorage.append(deltap)
-    print(delpstorage)
+    return(delpstorage)
 
 def uncertainty_energy(delp, delx, energies):
     uncertainty = delp*delx
@@ -39,6 +39,3 @@ def uncertainty_energy(delp, delx, energies):
     plt.tight_layout()
     plt.show()
 
-
-
-print("hello world")
