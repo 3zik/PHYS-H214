@@ -13,4 +13,7 @@ https://docs.google.com/presentation/d/1cM1cR8HjNV_OdxnBONecHRU6CFLf-vY5BhrmQL63
 Spreadsheet for report (from NIST data):
 https://docs.google.com/spreadsheets/d/127P4-5wNRlVIFX3TeWaBX4oOV3KLjd0dtYpSthGmoRw/edit?usp=sharing
 
+Paper for project:
+https://docs.google.com/document/d/1yWfCtfLCjkkDu89pIM4q6aciYt-luqVxpDuY4r9kBVA/edit?usp=sharing
+
 EF
