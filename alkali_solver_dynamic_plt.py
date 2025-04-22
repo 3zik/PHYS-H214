@@ -42,16 +42,7 @@ def solve_radial(R, N, l, alpha_c, a_l, num_states=5):
         main_diag, off_diag,
         select='i', select_range=(0, num_states-1)
     )
-"""
-    # NORMALIZE R #
-    for i in range(wavefns.shape[1]):
-        efunctions = wavefns[:, i]
-        integrand_radial = ((efunctions**2) * (r **2))
-        a= 1/(np.trapz(integrand_radial,r))
-        normalize_array = np.append(normalize_array, a)
-    wavefns=normalize_array*wavefns
     return r, energies, wavefns
-"""
 
 # === Convergence Check === #
 def find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6):
@@ -76,35 +67,28 @@ def find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6):
         E_prev = E0
     raise ValueError("NO CONVERGE")
 
-delxstorage = []
-delpstorage = []
-def x_expectation(r, wavefns):
-    # This computes the standard deviation Δx = sqrt(<x²> - <x>²) for each wavefunction
-    for i in range(wavefns.shape[1]):
-        efunc = wavefns[:, i]
-        integrand1 = r * efunc**2
-        integrand2 = (r**2) * efunc**2
-        x1 = np.trapz(integrand1, r)
-        x2 = np.trapz(integrand2, r)
-        deltax = np.sqrt(x2 - x1**2)
-        delxstorage.append(deltax)
-    return (delxstorage)
 
-def p_expectation(r, wavefns):
+def x_expectation2(r, f_n):
+    integrand1 = r * f_n**2
+    integrand2 = (r**2) * f_n**2
+    x1 = np.trapz(integrand1, r) # can be trapezoid or trapz depending on numpy version
+    x2 = np.trapz(integrand2, r) # can be trapezoid or trapz depending on numpy version
+    deltax = np.sqrt(x2 - x1**2)
+    return deltax
+
+def p_expectation2(r, f_n):
     #This computes the standard deviation Δp = sqrt(<p²> - <p>²) for each wavefunction
-    h_bar = 1.054571817 * 10**-34
-    for i in range(wavefns.shape[1]):
-        efunc = wavefns[:, i]
-        integrand1 = h_bar * efunc * np.gradient(efunc) # also has a factor of 1/i
-        integrand2 = -h_bar**2 * efunc * np.gradient(np.gradient(efunc))
-        p1 = np.trapz(integrand1,r) # can be trapezoid or trapz depending on numpy version
-        p2 = np.trapz(integrand2,r) # can be trapezoid or trapz depending on numpy version
-        deltap = np.sqrt(p2 + p1**2)
-        delpstorage.append(deltap)
-    return (delpstorage)
+    h_bar = 1
+    integrand1 = h_bar * f_n * np.gradient(f_n) # also has a factor of 1/i
+    integrand2 = -h_bar**2 * f_n * np.gradient(np.gradient(f_n))
+    p1 = np.trapz(integrand1,r) # can be trapezoid or trapz depending on numpy version
+    p2 = np.trapz(integrand2,r) # can be trapezoid or trapz depending on numpy version
+    deltap = np.sqrt(p2 + p1**2)
+    return deltap
 
 # === Main execution ===
 if __name__ == "__main__":
+    
     # 1. Convergence in R
     R_list = [100, 150, 200, 250, 300, 400, 500, 1000, 1500, 2000]
     h_target = 0.0001  # target grid spacing (a.u.)
@@ -121,16 +105,19 @@ if __name__ == "__main__":
 
     # 4. Plot first 3 radial wavefunctions R_n(r)
     plt.figure(figsize=(10,6))
-    for n in range(3):
-        fn = wavefns[:, n]
-        Rn = fn / r
+    for n in range(4):
+        un = wavefns[:, n]
+        fn = un / r
         # normalize: ∫|R|^2 r^2 dr = 1
-        norm = np.sqrt(np.trapz(Rn**2 * r**2, r))
-        Rn /= norm
-        plt.plot(r, Rn, label=f'n={n}, E={energies[n]:.6f} au')
+        norm = np.sqrt(np.trapz(fn**2 * r**2, r))
+        fn /= norm
+        plt.plot(r, fn, label=f'n={n}, E={energies[n]:.6f} au')
+        print("For E_"+str(n)+": <x> = "+str(x_expectation2(r, fn)))
+        print("For E_"+str(n)+": <p> = "+str(p_expectation2(r, fn)))
+
     plt.xlabel('r (a.u.)')
-    plt.ylabel(r'$R_n(r)$')
-    plt.title('Normalized Radial Wavefunctions for n=0,1,2')
+    plt.ylabel(r'$f_n(r)$')
+    plt.title('Normalized Wavefunctions for n=0,1,2')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
@@ -150,10 +137,3 @@ if __name__ == "__main__":
     plt.grid(True)
     plt.tight_layout()
     plt.show()
-
-
-
-    # Additional Code for Uncertainty #
-
-    print("Uncertainty of x (e.g. delta x) is:" + str(x_expectation(r, wavefns)))
-    print("Uncertainty of p (e.g. delta p) is:" + str(p_expectation(r, wavefns)))
