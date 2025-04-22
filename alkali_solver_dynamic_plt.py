@@ -42,7 +42,16 @@ def solve_radial(R, N, l, alpha_c, a_l, num_states=5):
         main_diag, off_diag,
         select='i', select_range=(0, num_states-1)
     )
+"""
+    # NORMALIZE R #
+    for i in range(wavefns.shape[1]):
+        efunctions = wavefns[:, i]
+        integrand_radial = ((efunctions**2) * (r **2))
+        a= 1/(np.trapz(integrand_radial,r))
+        normalize_array = np.append(normalize_array, a)
+    wavefns=normalize_array*wavefns
     return r, energies, wavefns
+"""
 
 # === Convergence Check === #
 def find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6):
