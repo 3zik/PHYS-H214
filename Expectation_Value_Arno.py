@@ -20,8 +20,8 @@ def p_expectation(r, wavefns):
     h_bar = 1.054571817 * 10**-34
     for i in range(wavefns.shape[1]):
         efunc = wavefns[:, i]
-        integrand1 = np.gradient(h_bar*efunc**2)
-        integrand2 = np.gradient(np.gradient(-h_bar**2*efunc**2))
+        integrand1 = h_bar * efunc * np.gradient(efunc) # also has a factor of 1/i
+        integrand2 = -h_bar**2 * efunc * np.gradient(np.gradient(efunc))
         p1 = np.trapz(integrand1,r) # can be trapezoid or trapz depending on numpy version
         p2 = np.trapz(integrand2,r) # can be trapezoid or trapz depending on numpy version
         deltap = np.sqrt(p2 + p1**2)
