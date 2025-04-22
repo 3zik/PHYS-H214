@@ -39,3 +39,11 @@ def uncertainty_energy(delp, delx, energies):
     plt.tight_layout()
     plt.show()
 
+
+def normalize(wavefns):
+    for i in range(wavefns.shape[1]):
+        efunc = wavefns[:, i]
+        A = np.sqrt(1/np.trapz(efunc**2))
+        normalizedefunc = A*efunc
+        wavefns[:,i] = normalizedefunc
+    return wavefns
