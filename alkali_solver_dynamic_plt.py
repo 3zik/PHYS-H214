@@ -105,35 +105,38 @@ if __name__ == "__main__":
 
     # 4. Plot first 3 radial wavefunctions R_n(r)
     plt.figure(figsize=(10,6))
-    for n in range(4):
+    for n in range(5):
         un = wavefns[:, n]
         fn = un / r
         # normalize: ∫|R|^2 r^2 dr = 1
         norm = np.sqrt(np.trapz(fn**2 * r**2, r))
         fn /= norm
-        plt.plot(r, fn, label=f'n={n}, E={energies[n]:.6f} au')
+        plt.plot(r, fn, label=f'n={n}, E={energies[n]*27.2114:.6f} eV')
         print("For E_"+str(n)+": <x> = "+str(x_expectation2(r, fn)))
         print("For E_"+str(n)+": <p> = "+str(p_expectation2(r, fn)))
 
     plt.xlabel('r (a.u.)')
     plt.ylabel(r'$f_n(r)$')
-    plt.title('Normalized Wavefunctions for n=0,1,2')
+    plt.title('Normalized Li Wavefunctions for n=0,1,2,3,4; l=1')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
     plt.show()
 
-    # 5. Plot radial probability density for ground state
+    # 5. Plot radial probability density
     plt.figure(figsize=(8,5))
-    fn0 = wavefns[:,0]
-    R0 = fn0 / r
-    norm0 = np.sqrt(np.trapz(R0**2 * r**2, r))
-    R0 /= norm0
-    P_r = R0**2 * r**2
-    plt.plot(r, P_r)
+    for m in range(5):
+        fn0 = wavefns[:,m]
+        R0 = fn0 / r
+        norm0 = np.sqrt(np.trapz(R0**2 * r**2, r))
+        R0 /= norm0
+        P_r = R0**2 * r**2
+        plt.plot(r, P_r, label=f'{m+2}s')
+    
     plt.xlabel('r (a.u.)')
     plt.ylabel(r'$|R_0(r)|^2 r^2$')
-    plt.title('Radial Probability Density (GND State)')
+    plt.title('Radial Probability Density')
+    plt.legend()
     plt.grid(True)
     plt.tight_layout()
     plt.show()
