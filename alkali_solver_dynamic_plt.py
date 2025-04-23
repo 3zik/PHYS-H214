@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.linalg import eigh_tridiagonal
 
 # ----------------------- PHYSICAL PARAMETERS ----------------------- #
-l = 0  # azimuthal quantum number
+the_Value = 2
+l = the_Value # azimuthal quantum number
 alpha_c = 0.192  # core polarizability
-a_l = 0.833     # inner hard wall radius (a.u.)
+a_l = 0.756    # inner hard wall radius (a.u.)
 
 # === Effective potential === #
 def V_eff(r, l, alpha_c, a_l):
@@ -105,7 +106,7 @@ if __name__ == "__main__":
 
     # 4. Plot first 3 radial wavefunctions R_n(r)
     plt.figure(figsize=(10,6))
-    for n in range(5):
+    for n in range(3):
         un = wavefns[:, n]
         fn = un / r
         # normalize: ∫|R|^2 r^2 dr = 1
@@ -117,25 +118,25 @@ if __name__ == "__main__":
 
     plt.xlabel('r (a.u.)')
     plt.ylabel(r'$f_n(r)$')
-    plt.title('Normalized Li Wavefunctions for n=0,1,2,3,4; l=1')
+    plt.title(f'Li Wavefunctions l = {the_Value}')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
     plt.show()
 
     # 5. Plot radial probability density
-    plt.figure(figsize=(8,5))
-    for m in range(5):
+    plt.figure(figsize=(10,6))
+    for m in range(3):
         fn0 = wavefns[:,m]
         R0 = fn0 / r
         norm0 = np.sqrt(np.trapz(R0**2 * r**2, r))
         R0 /= norm0
         P_r = R0**2 * r**2
-        plt.plot(r, P_r, label=f'{m+2}s')
+        plt.plot(r, P_r, label=f'{m+3}d')
     
     plt.xlabel('r (a.u.)')
     plt.ylabel(r'$|R_0(r)|^2 r^2$')
-    plt.title('Radial Probability Density')
+    plt.title('Li Radial Probability Density')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
