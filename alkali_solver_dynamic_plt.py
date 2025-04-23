@@ -5,8 +5,8 @@ from scipy.linalg import eigh_tridiagonal
 # ----------------------- PHYSICAL PARAMETERS ----------------------- #
 the_Value = 2
 l = the_Value # azimuthal quantum number
-alpha_c = 0.192  # core polarizability
-a_l = 0.756    # inner hard wall radius (a.u.)
+alpha_c = 0.99  # core polarizability
+a_l = 0.131    # inner hard wall radius (a.u.)
 
 # === Effective potential === #
 def V_eff(r, l, alpha_c, a_l):
@@ -91,7 +91,7 @@ def p_expectation2(r, f_n):
 if __name__ == "__main__":
     
     # 1. Convergence in R
-    R_list = [100, 150, 200, 250, 300, 400, 500, 1000, 1500, 2000]
+    R_list = [100, 120, 200, 250, 300, 400, 500, 1000, 1500, 2000]
     h_target = 0.0001  # target grid spacing (a.u.)
     R_conv, N, E0 = find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6)
 
@@ -118,7 +118,7 @@ if __name__ == "__main__":
 
     plt.xlabel('r (a.u.)')
     plt.ylabel(r'$f_n(r)$')
-    plt.title(f'Li Wavefunctions l = {the_Value}')
+    plt.title(f'Na Wavefunctions l = {the_Value}')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
