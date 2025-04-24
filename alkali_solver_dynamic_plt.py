@@ -5,8 +5,8 @@ from scipy.linalg import eigh_tridiagonal
 # ----------------------- PHYSICAL PARAMETERS ----------------------- #
 the_Value = 2
 l = the_Value # azimuthal quantum number
-alpha_c = .99 # core polarizability
-a_l = 0.131   # inner hard wall radius (a.u.)
+alpha_c = 0.192 # core polarizability
+a_l = 0.756   # inner hard wall radius (a.u.)
 
 # === Effective potential === #
 def V_eff(r, l, alpha_c, a_l):
@@ -90,10 +90,10 @@ def p_expectation2(r, f_n):
 # === Main execution ===
 if __name__ == "__main__":
 
-    num_states = 10
+    num_states = 3
     # 1. Convergence in R
     R_list = [100, 120, 150, 175, 200, 250, 300, 400, 500]
-    h_target = 0.00005  # target grid spacing (a.u.)
+    h_target = 0.0001  # target grid spacing (a.u.)
     R_conv, N, E0 = find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6)
 
     # 2. Solve for first 5 states at converged R
@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
     # 4. Plot first 3 radial wavefunctions R_n(r)
     plt.figure(figsize=(10,6))
-    for n in range(12):
+    for n in range(3):
         un = wavefns[:, n]
         fn = un / r
         # normalize: ∫|R|^2 r^2 dr = 1
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     plt.xlabel('r (a.u.)')
     plt.ylabel(r'$f_n(r)$')
-    plt.title(f'Na Wavefunctions l = {the_Value}')
+    plt.title(f'Li Wavefunctions l = {the_Value}')
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     # 5. Plot radial probability density
     plt.figure(figsize=(10,6))
-    for m in range(12):
+    for m in range(3):
         fn0 = wavefns[:,m]
         R0 = fn0 / r
         norm0 = np.sqrt(np.trapz(R0**2 * r**2, r))
