@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.linalg import eigh_tridiagonal
 
 # ----------------------- PHYSICAL PARAMETERS ----------------------- #
-the_Value = 2
+the_Value = 0
 l = the_Value # azimuthal quantum number
 alpha_c = 0.192 # core polarizability
-a_l = 0.756   # inner hard wall radius (a.u.)
+a_l = 0.833   # inner hard wall radius (a.u.)
 
 # === Effective potential === #
 def V_eff(r, l, alpha_c, a_l):
@@ -70,27 +70,29 @@ def find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6):
 
 
 def x_expectation2(r, f_n):
-    integrand1 = r * f_n**2
-    integrand2 = (r**2) * f_n**2
-    x1 = np.trapz(integrand1, r) # can be trapezoid or trapz depending on numpy version
-    x2 = np.trapz(integrand2, r) # can be trapezoid or trapz depending on numpy version
-    deltax = np.sqrt(x2 - x1**2)
-    return deltax
+
+
+    r1 = np.trapz(r * fn**2 * r**2, r)
+    r2 = np.trapz(r**2 * fn**2 * r**2, r)
+
+    delta_r_val = np.sqrt(r2 - r1**2)
+    return delta_r_val
 
 def p_expectation2(r, f_n):
+    
     #This computes the standard deviation Δp = sqrt(<p²> - <p>²) for each wavefunction
     h_bar = 1
-    integrand1 = h_bar * f_n * np.gradient(f_n) # also has a factor of 1/i
-    integrand2 = -h_bar**2 * f_n * np.gradient(np.gradient(f_n))
-    p1 = np.trapz(integrand1,r) # can be trapezoid or trapz depending on numpy version
-    p2 = np.trapz(integrand2,r) # can be trapezoid or trapz depending on numpy version
-    deltap = np.sqrt(p2 + p1**2)
+    dR = np.gradient(f_n, r)
+    dR_scaled = r**2 * dR
+    d2R_term = np.gradient(dR_scaled, r) / r**2
+    integrand = f_n * d2R_term * r**2
+    deltap = np.sqrt(-np.trapz(integrand, r))
     return deltap
 
 # === Main execution ===
 if __name__ == "__main__":
 
-    num_states = 3
+    num_states = 5
     # 1. Convergence in R
     R_list = [100, 120, 150, 175, 200, 250, 300, 400, 500]
     h_target = 0.0001  # target grid spacing (a.u.)
@@ -107,15 +109,16 @@ if __name__ == "__main__":
 
     # 4. Plot first 3 radial wavefunctions R_n(r)
     plt.figure(figsize=(10,6))
-    for n in range(3):
+    for n in range(5):
         un = wavefns[:, n]
         fn = un / r
         # normalize: ∫|R|^2 r^2 dr = 1
         norm = np.sqrt(np.trapz(fn**2 * r**2, r))
         fn /= norm
         plt.plot(r, fn, label=f'n={n}, E={energies[n]*27.2114:.6f} eV')
-        print("For E_"+str(n)+": <x> = "+str(x_expectation2(r, fn)))
-        print("For E_"+str(n)+": <p> = "+str(p_expectation2(r, fn)))
+        print("For E_"+str(n)+": delta x = "+str(x_expectation2(r, fn)))
+        print("For E_"+str(n)+": delta p = "+str(p_expectation2(r, fn)))
+        print("For E_"+str(n)+": delta x * delta p = "+str(x_expectation2(r, fn)*p_expectation2(r, fn)))
 
     plt.xlabel('r (a.u.)')
     plt.ylabel(r'$f_n(r)$')
@@ -127,7 +130,7 @@ if __name__ == "__main__":
 
     # 5. Plot radial probability density
     plt.figure(figsize=(10,6))
-    for m in range(3):
+    for m in range(5):
         fn0 = wavefns[:,m]
         R0 = fn0 / r
         norm0 = np.sqrt(np.trapz(R0**2 * r**2, r))
