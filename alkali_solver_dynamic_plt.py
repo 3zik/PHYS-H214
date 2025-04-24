@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.linalg import eigh_tridiagonal
 
 # ----------------------- PHYSICAL PARAMETERS ----------------------- #
-the_Value = 0
+the_Value = 2
 l = the_Value # azimuthal quantum number
-alpha_c = 9.2 # core polarizability
-a_l = 1.595    # inner hard wall radius (a.u.)
+alpha_c = .99 # core polarizability
+a_l = 0.131   # inner hard wall radius (a.u.)
 
 # === Effective potential === #
 def V_eff(r, l, alpha_c, a_l):
@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
     num_states = 10
     # 1. Convergence in R
-    R_list = [20, 30, 40, 50, 300, 400, 500, 1000, 1500, 2000]
+    R_list = [100, 120, 150, 175, 200, 250, 300, 400, 500]
     h_target = 0.00005  # target grid spacing (a.u.)
     R_conv, N, E0 = find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6)
 
