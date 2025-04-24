@@ -67,3 +67,16 @@ def normalize(wavefns):
         normalizedefunc = A*efunc
         wavefns[:,i] = normalizedefunc
     return wavefns
+
+def p_expectation2_new(r, f_n):
+    #This computes the standard deviation Δp = sqrt(<p²> - <p>²) for each wavefunction
+    h_bar = 1
+    integrand1 = h_bar * (f_n * np.gradient(f_n) - (f_n/r**2))# also has a factor of 1/i
+    term1 = -2*(f_n/r)*np.gradient(f_n)
+    term2 = f_n*np.gradient(np.gradient(f_n))
+    term3 = -2*(f_n**2/r**2)
+    integrand2 = -(h_bar**2)*(term1+term2+term3)
+    p1 = np.trapezoid(integrand1,r) # can be trapezoid or trapz depending on numpy version
+    p2 = np.trapezoid(integrand2,r) # can be trapezoid or trapz depending on numpy version
+    deltap = np.sqrt(p2 + p1**2)
+    return deltap
