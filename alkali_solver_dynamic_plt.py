@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.linalg import eigh_tridiagonal
 
 # ----------------------- PHYSICAL PARAMETERS ----------------------- #
-the_Value = 1
+the_Value = 0
 l = the_Value # azimuthal quantum number
-alpha_c = 0.192  # core polarizability
-a_l = 0.833    # inner hard wall radius (a.u.)
+alpha_c = 9.2 # core polarizability
+a_l = 1.595    # inner hard wall radius (a.u.)
 
 # === Effective potential === #
 def V_eff(r, l, alpha_c, a_l):
@@ -15,7 +15,7 @@ def V_eff(r, l, alpha_c, a_l):
     """
     V = np.empty_like(r)
     # avoid points exactly at a_l to prevent errors #
-    V[:] = -1.0 / r + alpha_c / (2 * (r**2 + a_l**2)**2) + l*(l+1)/(2*r**2)
+    V[:] = -1.0 / r - alpha_c / (2 * (r**2 + a_l**2)**2) + l*(l+1)/(2*r**2)
     return V
 
 # === Radial solver === #
@@ -54,7 +54,7 @@ def find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6):
     """
     E_prev = None
     for R in R_list:
-        N = max(200, int((R - a_l)/h_target))
+        N = max(500, int((R - a_l)/h_target))
         r, energies, _ = solve_radial(R, N, l, alpha_c, a_l, num_states)
         E0 = energies[0]
         if E_prev is None:
@@ -89,9 +89,10 @@ def p_expectation2(r, f_n):
 
 # === Main execution ===
 if __name__ == "__main__":
+
     num_states = 10
     # 1. Convergence in R
-    R_list = [100, 120, 150, 200, 300, 400, 500, 1000, 1500, 2000]
+    R_list = [20, 30, 40, 50, 300, 400, 500, 1000, 1500, 2000]
     h_target = 0.00005  # target grid spacing (a.u.)
     R_conv, N, E0 = find_converged_R(R_list, h_target, l, alpha_c, a_l, tol=1e-6)
 
