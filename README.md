@@ -17,6 +17,6 @@ Paper for project:
 https://docs.google.com/document/d/1yWfCtfLCjkkDu89pIM4q6aciYt-luqVxpDuY4r9kBVA/edit?usp=sharing
 
 Latex Final Draft:
-https://drive.google.com/file/d/1ckT8oSufjgfnlVdf9A-m1AI3rE-LFmGG/view?usp=sharing 
+https://drive.google.com/file/d/1SdBIzgroBxe-GQbGB-_A64CoKV1DLprZ/view?usp=sharing 
 
 EF
